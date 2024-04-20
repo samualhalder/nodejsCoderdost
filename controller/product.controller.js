@@ -1,9 +1,24 @@
 // const fs = require("fs");
 const { Product } = require("../models/product.model");
 const { response } = require("express");
-// const index = fs.readFileSync("index.html", "utf-8");
-// const data = JSON.parse(fs.readFileSync("data.json", "utf-8"));
-// const products = data.products;
+const ejs = require("ejs");
+const path = require("path");
+const { log } = require("console");
+
+//view
+exports.getAllProductsSSR = async (req, res) => {
+  const products = await Product.find();
+  console.log("innn");
+  ejs.renderFile(
+    path.resolve(__dirname, "../index.ejs"),
+    { products: products },
+    function (err, str) {
+      res.send(str);
+    }
+  );
+};
+
+//controler
 
 exports.createProduct = (req, res) => {
   const product = new Product(req.body);
@@ -53,6 +68,7 @@ exports.updateProductByID = (req, res) => {
     .catch((err) => res.json(err));
 };
 exports.deleteProductById = (req, res) => {
+  console.log("in delete");
   const id = req.params.id;
   Product.findOneAndDelete({ _id: id }, { new: true })
     .then((response) => res.json(response))

@@ -10,7 +10,7 @@ const cors = require("cors");
 server.use(cors());
 server.use(express.json()); //build in middleware -> body perser
 server.use(express.static(path.resolve(__dirname, "dist")));
-server.use(morgan("default"));
+// server.use(morgan("default"));
 server.use("/products", productRouter.router);
 server.use("/users", userRouter.router);
 server.use("*", (req, res) => {
