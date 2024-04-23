@@ -1,43 +1,36 @@
-// const fs = require("fs");
-// const index = fs.readFileSync("index.html", "utf-8");
-// const data = JSON.parse(fs.readFileSync("data.json", "utf-8"));
-// const users = data.users;
+const { User } = require("../models/user.model");
+const bycript = require("bcryptjs");
 
-exports.createUser = (req, res) => {
-  const newUser = req.body;
-  console.log(newUser);
 
-  users.push(newUser);
-  res.sendStatus(201, { newUser });
-};
 
 exports.getAllUsers = (req, res) => {
-  res.json(users);
+  User.find()
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err));
 };
 
 exports.getUserByID = (req, res) => {
-  const id = +req.params.id;
-  const User = users.filter((pro) => pro.id === id);
-  console.log(User);
-  res.json(User);
+  const id = req.params.id;
+  User.findById(id)
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err));
 };
 
 exports.replaceUserByID = (req, res) => {
-  const id = +req.params.id;
-  const index = users.findIndex((pro) => pro.id === id);
-  users.splice(index, 1, { ...req.body });
-  res.sendStatus(202);
+  const id = req.params.id;
+  User.findOneAndReplace({ _id: id }, req.body, { new: true })
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err));
 };
 exports.updateUserByID = (req, res) => {
-  const id = +req.params.id;
-  const index = users.findIndex((pro) => pro.id === id);
-  const User = users[index];
-  users.splice(index, 1, { ...User, ...req.body });
-  res.sendStatus(202);
+  const id = req.params.id;
+  User.findOneAndUpdate({ _id: id }, req.body, { new: true })
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err));
 };
 exports.deleteUserById = (req, res) => {
-  const id = +req.params.id;
-  const index = users.findIndex((pro) => pro.id === id);
-  users.splice(index, 1);
-  res.sendStatus(200);
+  const id = req.params.id;
+  User.findByIdAndDelete(id)
+    .then((response) => res.status(200).json(response))
+    .catch((err) => console.log(err));
 };
